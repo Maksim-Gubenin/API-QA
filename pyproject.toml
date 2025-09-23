@@ -9,7 +9,9 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "django (>=5.2.6,<6.0.0)",
-    "dotenv (>=0.9.9,<0.10.0)"
+    "dotenv (>=0.9.9,<0.10.0)",
+    "djangorestframework (>=3.16.1,<4.0.0)",
+    "psycopg (>=3.2.10,<4.0.0)"
 ]
 
 
@@ -123,12 +125,15 @@ ignore_missing_imports = true
 exclude = ".venv/|migrations/|tests/"
 
 [[tool.mypy.overrides]]
-module = "crm.mixins"
+module = [
+    "django.*",
+    "api_qa.admin",
+]
 ignore_errors = true
 
 [tool.coverage.run]
 source = [
-# Add source
+    "api_qa",
 ]
 
 branch = true
