@@ -1,0 +1,168 @@
+[project]
+name = "api-qa"
+version = "0.1.0"
+description = ""
+authors = [
+    { name = "Maksim", email = "maksimgubenin@mail.ru" }
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django (>=5.2.6,<6.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+pylint = "^3.3.7"
+pylint-django = { version = "^2.6.1", python = ">=3.12,<4.0" }
+black = "^25.1.0"
+isort = "^6.0.1"
+flake8 = "^7.3.0"
+mypy = "^1.17.1"
+flake8-pyproject = "^1.2.3"
+factory-boy = "^3.3.3"
+coverage = "^7.10.3"
+django-coverage-plugin = "^3.1.1"
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.venv
+    | migrations
+    | \.git
+    | __pycache__
+    | \.mypy_cache
+)/
+'''
+[tool.isort]
+profile = "black"
+line_length = 88
+skip = [".venv", "migrations"]
+known_third_party = ["django", "psycopg", "pytest"]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = "E203, W503"
+exclude = ".venv, migrations, __pycache__, .git"
+per-file-ignores = """
+    __init__.py: F401
+    tests/*: S101
+    */settings.py: F405
+"""
+
+[tool.pylint.django]
+django-settings-module = "config.settings"
+
+[tool.pylint.master]
+ignore-paths = [
+    "./manage.py",
+    ".*/migrations/.*",
+    ".*/settings.py",
+    ".*/manage.py",
+    ".*/apps.py",
+    "^.venv/",
+    "^.idea/",
+    "^.vscode/",
+    "^__pycache__/",
+    "^node_modules/",
+    "^static/",
+    "^media/",
+    "^dist/",
+    "^build/"
+]
+load-plugins = "pylint_django"
+
+[tool.pylint.messages_control]
+disable = """
+    raw-checker-failed,
+    bad-inline-option,
+    locally-disabled,
+    file-ignored,
+    suppressed-message,
+    useless-suppression,
+    deprecated-pragma,
+    use-implicit-booleaness-not-comparison-to-string,
+    use-implicit-booleaness-not-comparison-to-zero,
+    use-symbolic-message-instead,
+    missing-module-docstring,
+    too-many-ancestors,
+    missing-class-docstring,
+    missing-function-docstring,
+    invalid-name,
+    duplicate-code,
+    consider-using-f-string,
+    logging-fstring-interpolation
+"""
+
+[tool.pylint.format]
+max-line-length = 88
+disable = """
+    no-name-in-module,
+    import-error
+"""
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+ignore_missing_imports = true
+exclude = ".venv/|migrations/|tests/"
+
+[[tool.mypy.overrides]]
+module = "crm.mixins"
+ignore_errors = true
+
+[tool.coverage.run]
+source = [
+# Add source
+]
+
+branch = true
+omit = [
+    "**/migrations/**",
+    "**/tests/**",
+    "**/settings.py",
+    "**/urls.py",
+    "**/wsgi.py",
+    "**/asgi.py",
+    "**/manage.py",
+    "**/__init__.py",
+    "**/admin.py",
+    "**/apps.py",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "pass",
+]
+omit = [
+    "*/tests/*",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.coverage.threshold]
+fail_under = 80
+
+[tool.poetry.scripts]
+lint = "scripts.lint:main"
